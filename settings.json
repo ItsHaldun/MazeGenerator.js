@@ -1,0 +1,35 @@
+{
+	"canvas": {
+		"width": "max",
+		"height": "max",
+		"headerOffset": 57
+	},
+
+	"maze": {
+		"size": 20,
+		"margins": {
+			"top": 10,
+			"right": 10,
+			"bottom": 10,
+			"left": 10
+		}
+	},
+
+	"cell": {
+		"cellColors": {
+			"hidden": "#555555",
+			"visited": "#dddddd",
+			"current": "#00ff00",
+			"border": "#000000"
+		},
+		"wallSize": 4
+	},
+
+	"markings": {
+		"strokeWeight": 1,
+		"stroke": "#000000",
+		"startColor": "#aa0000",
+		"endColor": "#00aa00"
+	}
+
+}
