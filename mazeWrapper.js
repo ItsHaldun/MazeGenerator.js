@@ -8,13 +8,14 @@ class MazeWrapper {
 		// Create the Settings
 		// Main Settings Sliders
 		this.mazeSizeSlider = select("#maze-size-slider");
-		this.wallSizeSlider = select("#wall-size-slider");
+		this.frameRateSlider = select("#framerate-slider");
 
 		// Cell Cosmetics Pickers
 		this.hiddenColorPicker = select("#hidden-cell-picker");
 		this.visitedColorPicker = select("#visited-cell-picker");
 		this.currentColorPicker = select("#current-cell-picker");
 		this.wallColorPicker = select("#border-picker");
+		this.wallSizeSlider = select("#wall-size-slider");
 
 		// Marker Cosmetics Pickers
 		this.markerToggler = select("#marker-switch");
@@ -77,5 +78,7 @@ class MazeWrapper {
 		this.maze.cellSettings.markings.isDrawn = document.getElementById("marker-switch").checked;
 		this.maze.cellSettings.markings.startColor = this.startColorPicker.value();
 		this.maze.cellSettings.markings.endColor = this.endColorPicker.value();
+
+		this.maze.settings.frameRate = this.frameRateSlider.value();
 	}
 }

@@ -10,7 +10,7 @@ function setup() {
 	// Initialize the settings dictionary
 	settings = {
 		headerOffset: 57,
-
+		frameRate: 60,
 		mazeSize: 16,
 
 		mazeMargins: {
@@ -54,6 +54,7 @@ function setup() {
 function draw() {
   // put drawing code here
   background(255);
+	frameRate(mazeWrapper.maze.settings.frameRate);
 
 	mazeWrapper.update();
 
