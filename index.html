@@ -11,13 +11,111 @@
       margin: 0;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
-  <script src="sketch.js"></script>
-	<script src="cell.js"></script>
-	<script src="maze.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
 <body>
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Settings -->
+			<div class="col-md-12 col-lg-3 col-xl-4" style="background-color: #cfcfcf;">
+				<!-- Heading -->
+				<div class="row">
+					<h1 class="fw-bold p-4 mt-2 mb-4" style="text-align: center;">Maze Builder</h1>
+				</div>
+
+				<!-- Maze Building Settings -->
+				<div class="row" style="text-align: center;"><h3>Main Settings</h3></div>
+				<div class="row mb-3" style="text-align: center;">
+					<div class="col-12 col-xl-6">
+						<label for="maze-size-slider" class="form-label">Maze Size</label>
+						<input type="range" min="6" max="48" value="16" step="1" class="form-range" id="maze-size-slider">
+					</div>
+					<div class="col-12 col-xl-6">
+						<label for="wall-size-slider" class="form-label">Wall Thickness</label>
+						<input type="range" min="1" max="10" value="4" step="1" class="form-range" id="wall-size-slider">
+					</div>
+				</div>
+
+				<div class="row" style="text-align: center;"><h3>Cell Cosmetics</h3></div>
+				<div class="row mb-3" style="text-align: center;">
+					<div class="col-6 col-xl-3">
+						<label for="hidden-cell-picker" class="form-label">Hidden-Cell Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="hidden-cell-picker" value="#555555" title="Choose Hidden-Cell Color" style="display: inline;">
+						</div>
+					</div>
+					<div class="col-6 col-xl-3">
+						<label for="visited-cell-picker" class="form-label">Visited-Cell Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="visited-cell-picker" value="#dddddd" title="Choose Visited-Cell Color" style="display: inline;">
+						</div>
+					</div>
+					<div class="col-6 col-xl-3">
+						<label for="current-cell-picker" class="form-label">Current-Cell Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="current-cell-picker" value="#00ff00" title="Choose Current-Cell Color" style="display: inline;">
+						</div>
+					</div>
+					<div class="col-6 col-xl-3">
+						<label for="border-picker" class="form-label">Border Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="border-picker" value="#000000" title="Choose Wall Color" style="display: inline;">
+						</div>
+					</div>
+				</div>
+
+				<div class="row" style="text-align: center;"><h3>Marker Cosmetics</h3></div>
+				<div class="row mb-3" style="text-align: center;">
+					<div class="col-4 form-check form-switch p-0">
+						<div class="row" style="vertical-align: middle; justify-content: center;">
+							<label class="form-check-label" for="marker-switch">Toggle Markers</label>
+						</div>
+						<div class="row" style="display: inline-block; vertical-align: top;">
+							<input class="form-check-input" type="checkbox" role="switch" id="marker-switch" style="position: relative; left: 20px; top: 10px;">
+						</div>
+					</div>
+					<div class="col-4">
+						<label for="start-color-picker" class="form-label">Start Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="start-color-picker" value="#aa0000" title="Choose Start Color" style="display: inline;">
+						</div>
+					</div>
+					<div class="col-4">
+						<label for="end-color-picker" class="form-label">End Color</label>
+						<div style="vertical-align: middle;">
+							<input type="color" class="form-control form-control-color" id="end-color-picker" value="#00aa00" title="Choose End Color" style="display: inline;">
+						</div>
+					</div>
+				</div>
+
+				<div class="row" style="text-align: center;">
+					<div class="col-12 col-xl-4 mb-3">
+						<button type="button" class="btn btn-primary" id="build-maze-button" style="width:100%; height:100%;">Build Maze</button>
+					</div>
+					<div class="col-12 col-xl-4 mb-3">
+						<button type="button" class="btn btn-success" id="save-maze-button" style="width:100%; height:100%;">Save Maze</button>
+					</div>
+					<div class="col-12 col-xl-4 mb-3">
+						<button type="button" class="btn btn-danger" id="re-maze-button" style="width:100%; height:100%;" height:100%;>Remake Maze</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Canvas -->
+			<div class="col-md-12 col-lg-9 col-xl-8 ml-md-0" style="background-color: #ffffff;">
+				<div id="canvas-div" style="text-align: center;"></div>
+			</div>
+			
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+	<script src="sketch.js"></script>
+	<script src="cell.js"></script>
+	<script src="maze.js"></script>
+	<script src="mazeWrapper.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 
 </html>

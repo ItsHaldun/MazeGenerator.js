@@ -1,22 +1,26 @@
 class Maze {
-	constructor(settings, canvasWidth, canvasHeight) {
+	constructor(settings, canvasSize) {
 		// Finish mark lets you skip the step function
 		this.finished = false;
+		this.started = false;
 
-		// Get the maze settings
+		this.canvasSize = canvasSize;
 		this.settings = settings;
-		this.size = settings.maze.size;
-		this.margins = settings.maze.margins;
+		this.size = settings.mazeSize;
+		this.margins = settings.mazeMargins;
 
-		// Calculate the needed cell size
-		this.cellSize = (canvasWidth<canvasHeight) ? floor((canvasWidth-this.margins.bottom)/this.size): floor((canvasHeight-this.margins.right)/this.size);
+		let cellSize = floor((canvasSize-this.margins.bottom)/this.size);
+
+		// Load the cell Settings
+		this.cellSettings = settings.cellSettings;
+		this.cellSettings.cellSize = cellSize;
 
 		// Create the cell grid
 		this.grid = [];
 
 		for (let i = 0; i < this.size; i++) {
 			for (let j = 0; j < this.size; j++) {
-				this.grid.push(new Cell(i, j, j*this.cellSize + this.margins.left, i*this.cellSize + this.margins.top, this.cellSize, settings));
+				this.grid.push(new Cell(i, j, j*this.cellSettings.cellSize + this.margins.left, i*this.cellSettings.cellSize + this.margins.top));
 			}
 		}
 
@@ -29,7 +33,7 @@ class Maze {
 
 	// Steps through the generation algorithm
 	step() {
-		if (this.finished) {
+		if (this.finished || !this.started) {
 			return;
 		}
 		// STEP 2: Check for unvisited cells
@@ -122,37 +126,49 @@ class Maze {
 		return false;
 	}
 
+	// Updates coordinates of the cell within the maze
+	updateCoordinates() {
+		for (let i = 0; i < this.size; i++) {
+			for (let j = 0; j < this.size; j++) {
+				this.grid[i*this.size + j].x = j*this.cellSettings.cellSize + this.margins.left;
+				this.grid[i*this.size + j].y = i*this.cellSettings.cellSize + this.margins.top;
+			}
+		}
+	}
+
 	draw() {
 		// Draw the cells
 		for (let n = 0; n < this.grid.length; n++) {
-			this.grid[n].draw();
+			this.grid[n].draw(this.cellSettings);
 		}
 
 		// Draw the start and end marks
 		if (this.finished) {
-			strokeWeight(this.settings.markings.strokeWeight);
-			stroke(this.settings.markings.stroke);
+			if (this.cellSettings.markings.isDrawn) {
+			strokeWeight(this.cellSettings.wallSize);
+			stroke(this.cellSettings.markings.stroke);
 			push();
 			// Start mark
 			translate(this.margins.left, 
 								this.margins.top);
 			
-			fill(this.settings.markings.startColor);
-			triangle(1*this.cellSize/6, 1*this.cellSize/3,
-							 2*this.cellSize/4, 1*this.cellSize/2,
-							 1*this.cellSize/6, 2*this.cellSize/3);
+			fill(this.cellSettings.markings.startColor);
+			triangle(1*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/3,
+							 2*this.cellSettings.cellSize/4, 1*this.cellSettings.cellSize/2,
+							 1*this.cellSettings.cellSize/6, 2*this.cellSettings.cellSize/3);
 			pop();
 			
 			// End mark
 			push();
-			translate(this.cellSize * (this.size-1) + this.margins.left, 
-								this.cellSize * (this.size-1) + this.margins.top);
+			translate(this.cellSettings.cellSize * (this.size-1) + this.margins.left, 
+								this.cellSettings.cellSize * (this.size-1) + this.margins.top);
 			
-			fill(this.settings.markings.endColor);
-			triangle(3*this.cellSize/6, 1*this.cellSize/3,
-							 5*this.cellSize/6, 1*this.cellSize/2,
-							 3*this.cellSize/6, 2*this.cellSize/3);
+			fill(this.cellSettings.markings.endColor);
+			triangle(3*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/3,
+							 5*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/2,
+							 3*this.cellSettings.cellSize/6, 2*this.cellSettings.cellSize/3);
 			pop();
+			}
 		}
 	}
 }

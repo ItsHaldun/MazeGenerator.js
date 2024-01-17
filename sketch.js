@@ -1,39 +1,70 @@
 var settings;
-var canvasWidth, canvasHeight;
-var maze;
+var mazeWrapper;
 
-function preload() {
-  // Get the most recent earthquake in the database
-  settings = loadJSON("settings.json");
-}
+var canvasSize;
+var myCanvas;
+
+var cellSize;
 
 function setup() {
-  // Get the width from settings
-	if (settings.canvas.width == "max") {
-		canvasWidth = windowWidth;
-	}
-	else {
-		canvasWidth = settings.canvas.width
-	}
+	// Initialize the settings dictionary
+	settings = {
+		headerOffset: 57,
 
-	// Get the height from settings
-	if (settings.canvas.height == "max") {
-		canvasHeight = windowHeight - settings.canvas.headerOffset;
-	}
-	else {
-		canvasHeight = settings.canvas.height - settings.canvas.headerOffset;
-	}
+		mazeSize: 16,
 
-  createCanvas(canvasWidth, canvasHeight);
+		mazeMargins: {
+			top: 12,
+			right: 12,
+			bottom: 12,
+			left: 12
+		},
 
-	// Create the Maze
-	maze = new Maze(settings, canvasWidth, canvasHeight);
+		cellSettings: {
+			cellSize: 12,
+			wallSize: 2,
+
+			cellColors : {
+				hidden: "#555555",
+				visited: "#dddddd",
+				current: "#00ff00",
+				border: "#000000"
+			},
+
+			markings : {
+				isDrawn : true,
+				stroke: "#000000",
+				startColor: "#aa0000",
+				endColor: "#00aa00"
+			}
+		}
+	}
+	
+	// Select the smallest browser dimension
+	canvasSize = min(windowWidth - settings.mazeMargins.left - settings.mazeMargins.right, windowHeight - settings.headerOffset - settings.mazeMargins.bottom);
+
+	// Create the canvas, assign to a parent element
+  myCanvas = createCanvas(canvasSize, canvasSize);
+	myCanvas.parent("canvas-div");
+
+	// Create the Maze Wrapper
+	mazeWrapper = new MazeWrapper(new Maze(settings, canvasSize), myCanvas);
 }
 
 function draw() {
   // put drawing code here
   background(255);
 
-	maze.step();
-	maze.draw();
+	mazeWrapper.update();
+
+	mazeWrapper.maze.step();
+	mazeWrapper.maze.draw();
+}
+
+function windowResized() {
+	canvasSize = min(windowWidth - settings.mazeMargins.left - settings.mazeMargins.right, windowHeight - settings.headerOffset - settings.mazeMargins.bottom);
+  resizeCanvas(canvasSize, canvasSize);
+	cellSize = floor((canvasSize-settings.mazeMargins.bottom)/mazeWrapper.maze.size);
+	mazeWrapper.maze.cellSettings.cellSize = cellSize;
+	mazeWrapper.maze.updateCoordinates();
 }

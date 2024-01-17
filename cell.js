@@ -1,17 +1,9 @@
 class Cell {
-	constructor(i, j, x, y, size, settings) {
+	constructor(i, j, x, y) {
 		this.i = i;
 		this.j = j;
 		this.x = x;
 		this.y = y;
-
-		// Get the size and colors from the Settings File
-		this.size = size;
-		this.hiddenColor = settings.cell.cellColors.hidden;
-		this.visitedColor = settings.cell.cellColors.visited;
-		this.currentColor = settings.cell.cellColors.current;
-		this.borderColor = settings.cell.cellColors.border;
-		this.wallSize = settings.cell.wallSize;
 
 		// Set up the default states of the cell
 		this.current = false;
@@ -46,42 +38,43 @@ class Cell {
 		}
 	}
 
-	draw() {
+	draw(cellSettings) {
+		let size = cellSettings.cellSize;
 		push();
 		// Chose the appropriate fill color
 		if (this.current) {
-			fill(this.currentColor);
+			fill(cellSettings.cellColors.current);
 		}
 		else if (this.visited) {
-			fill(this.visitedColor);
+			fill(cellSettings.cellColors.visited);
 		}
 		else {
-			fill(this.hiddenColor);
+			fill(cellSettings.cellColors.hidden);
 		}
 
 		// Draw the cell
 		noStroke();
-		rect(this.x, this.y, this.size, this.size);
+		rect(this.x, this.y, size, size);
 
 		// Draw the walls
-		stroke(this.borderColor);
-		strokeWeight(this.wallSize);
+		stroke(cellSettings.cellColors.border);
+		strokeWeight(cellSettings.wallSize);
 
 		if (this.walls[0]) {
 			// TOP
-			line(this.x, this.y, this.x + this.size, this.y);
+			line(this.x, this.y, this.x + size, this.y);
 		}
 		if (this.walls[1]) {
 			// RIGHT
-			line(this.x + this.size, this.y, this.x + this.size, this.y + this.size);
+			line(this.x + size, this.y, this.x + size, this.y + size);
 		}
 		if (this.walls[2]) {
 			// BOTTOM
-			line(this.x, this.y + this.size, this.x + this.size, this.y + this.size);
+			line(this.x, this.y + size, this.x + size, this.y + size);
 		}
 		if (this.walls[3]) {
 			// LEFT
-			line(this.x, this.y, this.x, this.y + this.size);
+			line(this.x, this.y, this.x, this.y + size);
 		}
 		pop();
 	}
