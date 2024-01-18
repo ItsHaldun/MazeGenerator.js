@@ -3,7 +3,7 @@ class AstarSearch {
 	constructor(maze, start=0, goal=-1) {
 		this.mazeSize = maze.size;
 
-		this.started = true;
+		this.started = false;
 		this.finished = false;
 
 		this.path = undefined;
@@ -32,21 +32,22 @@ class AstarSearch {
 		this.startNode.fScore = this.heuristic(this.startNode);
 
 
-		// Create the Open and Closed Sets
+		// Create the Open Set
 		this.openSet = [];
 		this.openSet.push(this.startNode);
 	}
 
-	step(mazeFinished) {
+	step() {
 		// Only Start search if start command is given and the maze is finished
-		if (!this.started || !mazeFinished || this.finished) {
+		if (!this.started || this.finished) {
 			return;
 		}
-
 		if (this.openSet.length > 0) {
 			// Sort the nodes by lowest F value (May not need to do this at everystep?)
 			// Current node is the one with lowest F value 
 			let currentNode = this.openSet[0];
+			// To display it as different color
+			currentNode.cell.inList = true;
 
 			// If we are at the goal, returns the path to the node
 			if (currentNode.isGoal == true) {
@@ -73,7 +74,9 @@ class AstarSearch {
 
 					// Add the neighbor to the openSet and sort the set
 					if (!this.openSet.includes(neighbors[n])) {
-						this.openSet.push(neighbors[n])
+						// The first one is the display different colors
+						neighbors[n].cell.inList = true;
+						this.openSet.push(neighbors[n]);
 						this.openSet.sort(function(a, b) {return a.fScore - b.fScore;});
 					}
 				}
@@ -86,9 +89,11 @@ class AstarSearch {
 
 	reconstructPath(node) {
 		let totalPath = [node];
+		node.cell.onPath = true;
 
 		let parent = node.cameFrom;
 		while (parent) {
+			parent.cell.onPath = true;
 			let temp = parent;
 			totalPath.unshift(temp);
 			parent = parent.cameFrom;

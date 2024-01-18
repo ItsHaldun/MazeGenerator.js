@@ -2,6 +2,7 @@ class MazeWrapper {
 	constructor (maze, canvas) {
 		// To access the settings of the maze
 		this.maze = maze;
+		this.solver = undefined;
 		// To save the Canvas
 		this.canvas = canvas;
 
@@ -22,6 +23,10 @@ class MazeWrapper {
 		this.startColorPicker = select("#start-color-picker");
 		this.endColorPicker = select("#end-color-picker");
 
+		// Solver Cosmetics Pickers
+		this.pathPicker = select("#path-color-picker");
+		this.tracePicker = select("#trace-color-picker");
+
 		// Start Button
 		this.startButton = select("#build-maze-button");
 		this.startButton.mousePressed(() => {
@@ -40,6 +45,16 @@ class MazeWrapper {
 			this.maze = new Maze(this.maze.settings, this.maze.canvasSize, this.maze.size);
 			// Re-enable Settings
 			document.getElementById("maze-size-slider").disabled = false;
+			document.getElementById("solve-maze-button").disabled = true;
+		});
+
+		// Start Solver Button
+		this.solveButton = select("#solve-maze-button");
+		this.solveButton.mousePressed(() => {
+			this.solver = new AstarSearch(this.maze);
+			this.solver.started = true;
+			// Re-enable Settings
+			// document.getElementById("solve-maze-button").disabled = true;
 		});
 	}
 	
@@ -61,6 +76,7 @@ class MazeWrapper {
 		}
 		else {
 			document.getElementById("save-maze-button").disabled = false;
+			document.getElementById("solve-maze-button").disabled = false;
 		}
 
 		// Updates that can be changed anytime
@@ -78,6 +94,12 @@ class MazeWrapper {
 		this.maze.cellSettings.markings.isDrawn = document.getElementById("marker-switch").checked;
 		this.maze.cellSettings.markings.startColor = this.startColorPicker.value();
 		this.maze.cellSettings.markings.endColor = this.endColorPicker.value();
+
+		// Solver Cosmetics
+		this.maze.cellSettings.searchColors.pathDrawn = document.getElementById("path-switch").checked;
+		this.maze.cellSettings.searchColors.listDrawn = document.getElementById("trace-switch").checked;
+		this.maze.cellSettings.searchColors.onPath = this.pathPicker.value();
+		this.maze.cellSettings.searchColors.inList = this.tracePicker.value();
 
 		this.maze.settings.frameRate = this.frameRateSlider.value();
 	}

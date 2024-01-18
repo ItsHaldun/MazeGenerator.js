@@ -9,6 +9,10 @@ class Cell {
 		this.current = false;
 		this.visited = false;
 
+		// Search Related Checks (Only for Cosmetics)
+		this.onPath = false;
+		this.inList = false;
+
 		// Array for the visibility state of the walls
 		// TOP RIGHT BOTTOM LEFT
 		this.walls = [true, true, true, true];
@@ -42,7 +46,13 @@ class Cell {
 		let size = cellSettings.cellSize;
 		push();
 		// Chose the appropriate fill color
-		if (this.current) {
+		if (this.onPath && cellSettings.searchColors.pathDrawn) {
+			fill(cellSettings.searchColors.onPath);
+		}
+		else if (this.inList && cellSettings.searchColors.listDrawn) {
+			fill(cellSettings.searchColors.inList);
+		}
+		else if (this.current) {
 			fill(cellSettings.cellColors.current);
 		}
 		else if (this.visited) {

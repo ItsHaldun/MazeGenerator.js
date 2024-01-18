@@ -1,0 +1,2 @@
+- Randomize Marker Locations
+- Tidy up the index.html
