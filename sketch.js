@@ -1,6 +1,8 @@
 var settings;
 var mazeWrapper;
 
+var searchAgent;
+
 var canvasSize;
 var myCanvas;
 
@@ -49,6 +51,9 @@ function setup() {
 
 	// Create the Maze Wrapper
 	mazeWrapper = new MazeWrapper(new Maze(settings, canvasSize), myCanvas);
+
+	// Initialize the Search Agent
+	searchAgent = undefined;
 }
 
 function draw() {
@@ -60,6 +65,25 @@ function draw() {
 
 	mazeWrapper.maze.step();
 	mazeWrapper.maze.draw();
+
+	if(mazeWrapper.maze.finished) {
+		if(searchAgent === undefined) {
+			searchAgent = new AstarSearch(mazeWrapper.maze);
+		}
+		else if (!searchAgent.finished){
+			searchAgent.step(mazeWrapper.maze.finished);
+
+			if (searchAgent.path) {
+				for(let n = 0; n < searchAgent.path.length; n++) {
+					push();
+					fill("#ff0000");
+					rect(searchAgent.path[n].cell.x, searchAgent.path[n].cell.y, 20, 20);
+					pop();
+					noLoop();
+				}
+			}
+		}
+	}
 }
 
 function windowResized() {
