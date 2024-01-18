@@ -11,6 +11,11 @@ class Maze {
 
 		let cellSize = floor((canvasSize-this.margins.bottom)/this.size);
 
+		// Get a random number for start and finish locations
+		// Maze always starts on the left and ends on the right
+		this.startPos = floor(random(this.size));
+		this.endPos = floor(random(this.size));
+
 		// Load the cell Settings
 		this.cellSettings = settings.cellSettings;
 		this.cellSettings.cellSize = cellSize;
@@ -73,8 +78,8 @@ class Maze {
 			this.currentCell.current = false;
 			
 			// Remove the walls the the start and end cells
-			this.grid[0].walls[3] = false;
-			this.grid[this.size**2 - 1].walls[1] = false;
+			this.grid[this.size*this.startPos].walls[3] = false;
+			this.grid[this.size*(this.endPos +1) - 1].walls[1] = false;
 
 			// Mark the maze as finished
 			this.finished = true;
@@ -149,24 +154,24 @@ class Maze {
 			stroke(this.cellSettings.markings.stroke);
 			push();
 			// Start mark
-			translate(this.margins.left, 
-								this.margins.top);
+			translate(this.margins.left,
+								this.cellSettings.cellSize * this.startPos + this.margins.top);
 			
 			fill(this.cellSettings.markings.startColor);
-			triangle(1*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/3,
-							 2*this.cellSettings.cellSize/4, 1*this.cellSettings.cellSize/2,
-							 1*this.cellSettings.cellSize/6, 2*this.cellSettings.cellSize/3);
+			triangle(0, 1*this.cellSettings.cellSize/3,
+							 0.8*this.cellSettings.cellSize/3, 1*this.cellSettings.cellSize/2,
+							 0, 2*this.cellSettings.cellSize/3);
 			pop();
 			
 			// End mark
 			push();
 			translate(this.cellSettings.cellSize * (this.size-1) + this.margins.left, 
-								this.cellSettings.cellSize * (this.size-1) + this.margins.top);
+								this.cellSettings.cellSize * this.endPos + this.margins.top);
 			
 			fill(this.cellSettings.markings.endColor);
-			triangle(3*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/3,
-							 5*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/2,
-							 3*this.cellSettings.cellSize/6, 2*this.cellSettings.cellSize/3);
+			triangle(2*this.cellSettings.cellSize/3, 1*this.cellSettings.cellSize/3,
+							 5.8*this.cellSettings.cellSize/6, 1*this.cellSettings.cellSize/2,
+							 2*this.cellSettings.cellSize/3, 2*this.cellSettings.cellSize/3);
 			pop();
 			}
 		}

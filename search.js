@@ -1,6 +1,6 @@
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 class AstarSearch {
-	constructor(maze, start=0, goal=-1) {
+	constructor(maze) {
 		this.mazeSize = maze.size;
 
 		this.started = false;
@@ -15,19 +15,11 @@ class AstarSearch {
 		}
 
 		// Set end node
-		this.endNode;
-		if (goal == -1) {
-			this.endNode = this.nodes[this.nodes.length - 1];
-			this.endNode.isGoal = true;
-
-		}
-		else {
-			this.endNode = this.nodes[goal];
-			this.nodes[goal].isGoal = true;
-		}
+		this.endNode = this.nodes[maze.size*(maze.endPos +1) - 1];
+		this.endNode.isGoal = true;
 
 		// Start note always has a gScore of 0
-		this.startNode = this.nodes[start];
+		this.startNode = this.nodes[maze.size*maze.startPos];
 		this.startNode.gScore = 0;
 		this.startNode.fScore = this.heuristic(this.startNode);
 
